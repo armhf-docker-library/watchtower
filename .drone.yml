@@ -1,0 +1,21 @@
+clone:
+  path: github.com/CenturyLinkLabs
+
+build:
+  image: armhfbuild/drone-golang:1.5
+  environment:
+    - CGO_ENABLED=0
+  commands:
+    - git clone --single-branch https://github.com/CenturyLinkLabs/watchtower
+    - cd watchtower
+    - GOPATH=$PWD/Godeps/_workspace:$GOPATH
+    - go build
+
+publish:
+  docker:
+    context: watchtower
+    file: watchtower/Dockerfile
+    username: $$DOCKER_USER
+    email: $$DOCKER_EMAIL
+    password: $$DOCKER_PASSWORD
+    repo: armhfbuild/watchtower
